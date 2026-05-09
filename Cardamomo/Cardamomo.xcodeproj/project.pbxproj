@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		64AFE12B2FAFF47C00FC2D0C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 64AFE12A2FAFF47C00FC2D0C /* FirebaseAuth */; };
+		64AFE12D2FAFF47C00FC2D0C /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		64AFE10F2FAFE22C00FC2D0C /* Cardamomo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cardamomo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64AFE12D2FAFF47C00FC2D0C /* FirebaseDatabase in Frameworks */,
+				64AFE12B2FAFF47C00FC2D0C /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +62,7 @@
 				64AFE10B2FAFE22C00FC2D0C /* Sources */,
 				64AFE10C2FAFE22C00FC2D0C /* Frameworks */,
 				64AFE10D2FAFE22C00FC2D0C /* Resources */,
+				64AFE1572FAFFA1F00FC2D0C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -65,6 +73,8 @@
 			);
 			name = Cardamomo;
 			packageProductDependencies = (
+				64AFE12A2FAFF47C00FC2D0C /* FirebaseAuth */,
+				64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */,
 			);
 			productName = Cardamomo;
 			productReference = 64AFE10F2FAFE22C00FC2D0C /* Cardamomo.app */;
@@ -94,6 +104,9 @@
 			);
 			mainGroup = 64AFE1062FAFE22C00FC2D0C;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 64AFE1102FAFE22C00FC2D0C /* Products */;
 			projectDirPath = "";
@@ -113,6 +126,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		64AFE1572FAFFA1F00FC2D0C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		64AFE10B2FAFE22C00FC2D0C /* Sources */ = {
@@ -255,6 +289,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P7TRYF2C5H;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -287,6 +322,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P7TRYF2C5H;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -332,6 +368,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		64AFE12A2FAFF47C00FC2D0C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64AFE1072FAFE22C00FC2D0C /* Project object */;
 }
