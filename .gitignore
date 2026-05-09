@@ -60,4 +60,9 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# DS_ strpe
 .DS_Store
+
+# Ignore Google Firebase configuration for iOS
+**/GoogleService-Info.plist
