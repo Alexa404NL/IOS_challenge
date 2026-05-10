@@ -18,4 +18,3 @@ struct Receta: Codable, Identifiable {
     var ingredients: [Ingrediente]
     var tags: [String]
 }
-
