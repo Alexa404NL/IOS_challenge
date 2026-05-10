@@ -16,7 +16,7 @@ struct CardamomoApp: App {
            }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WelcomeView()
         }
     }
 }
