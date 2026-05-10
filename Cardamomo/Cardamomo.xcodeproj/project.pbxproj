@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		64AFE12B2FAFF47C00FC2D0C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 64AFE12A2FAFF47C00FC2D0C /* FirebaseAuth */; };
-		64AFE12D2FAFF47C00FC2D0C /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */; };
+		64AFE1782FB0253C00FC2D0C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 64AFE1772FB0253C00FC2D0C /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64AFE12D2FAFF47C00FC2D0C /* FirebaseDatabase in Frameworks */,
 				64AFE12B2FAFF47C00FC2D0C /* FirebaseAuth in Frameworks */,
+				64AFE1782FB0253C00FC2D0C /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +40,7 @@
 			isa = PBXGroup;
 			children = (
 				64AFE1112FAFE22C00FC2D0C /* Cardamomo */,
+				64AFE1762FB0253C00FC2D0C /* Frameworks */,
 				64AFE1102FAFE22C00FC2D0C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +51,13 @@
 				64AFE10F2FAFE22C00FC2D0C /* Cardamomo.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		64AFE1762FB0253C00FC2D0C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,7 +82,7 @@
 			name = Cardamomo;
 			packageProductDependencies = (
 				64AFE12A2FAFF47C00FC2D0C /* FirebaseAuth */,
-				64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */,
+				64AFE1772FB0253C00FC2D0C /* FirebaseFirestore */,
 			);
 			productName = Cardamomo;
 			productReference = 64AFE10F2FAFE22C00FC2D0C /* Cardamomo.app */;
@@ -386,10 +394,10 @@
 			package = 64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		64AFE12C2FAFF47C00FC2D0C /* FirebaseDatabase */ = {
+		64AFE1772FB0253C00FC2D0C /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 64AFE1292FAFF47C00FC2D0C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
