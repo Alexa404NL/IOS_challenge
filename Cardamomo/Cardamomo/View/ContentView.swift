@@ -13,12 +13,12 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Button(action: {
-                    self.isActive = true }){
+                Button(action: { self.isActive = true}){
                     Text("Go to Details")
                 }
-                NavigationLink(destination: Text("Detail View"), isActive: $isActive) {
-                    EmptyView()}
+                NavigationLink(destination: Text("Detail View"), isActive: $isActive){
+                    EmptyView()
+                }
             }
         }
     }
