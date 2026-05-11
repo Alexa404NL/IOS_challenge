@@ -8,9 +8,11 @@
 import Foundation
 import FirebaseFirestore
 
-struct Ingrediente: Codable {
-    var ingredientId: String
+struct Ingrediente: Codable, Identifiable{
+    @DocumentID var id: String?
     var name: String
-    var quantity: String
-    var unit: String
+    var createdAt: Date
+    var ownerId: String?
+    var isGlobal: Bool
+    var tags: [String]
 }
