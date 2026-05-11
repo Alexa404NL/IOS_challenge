@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseFirestore
 
-struct ReecetaGuardada: Codable, Identifiable {
+struct RecetaGuardada: Codable, Identifiable {
     @DocumentID var id: String?
     var savedAt: Date
 }

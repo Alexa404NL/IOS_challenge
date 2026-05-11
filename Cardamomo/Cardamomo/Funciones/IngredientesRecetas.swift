@@ -41,13 +41,13 @@ class IngredientesRecetas {
                 .document(userId)
                 .collection("saved_recipes")
                 .document(recipeId) // id doc = id de la receta
-            let savedData = ReecetaGuardada(savedAt: Date())
+            let savedData = RecetaGuardada(savedAt: Date())
             try savedRef.setData(from: savedData)
     }
     func fetchSavedRecipes(for userId: String) async throws -> [Receta] {
             let savedRefQuery = database.collection("users").document(userId).collection("saved_recipes")
             let snapshot = try await savedRefQuery.order(by: "savedAt", descending: true).getDocuments()
-            let savedRefs = snapshot.documents.compactMap { try? $0.data(as: ReecetaGuardada.self) }
+            let savedRefs = snapshot.documents.compactMap { try? $0.data(as: RecetaGuardada.self) }
             guard !savedRefs.isEmpty else { return [] }
             var fullRecipes: [Receta] = []
             for ref in savedRefs {
