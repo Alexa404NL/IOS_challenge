@@ -129,7 +129,8 @@ final class RecipeRAGService {
         Dentro de las intstrucciones se claro y
         mayor detalle aquello que se tiene que realizar, desde preparación de instrumentos,
         cómo debe añadirse el alimento,
-        si debe ser condimentado, esto siguiendo el formato extenso de las instrucciones de las recetas provistas como referencia. En caso de ser necesario extiende las instrucciones lo que sea necesario.
+        si debe ser condimentado, esto siguiendo el formato extenso de las instrucciones de las recetas provistas como referencia. 
+        En caso de ser necesario extiende las instrucciones lo que sea necesario.
         Responde únicamente JSON válido, sin markdown, con esta forma exacta:
         {
           "recipes": [
