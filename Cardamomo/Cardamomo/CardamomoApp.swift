@@ -18,5 +18,6 @@ struct CardamomoApp: App {
         WindowGroup {
             WelcomeView()
         }
+        .modelContainer(for: RecipeEntity.self)
     }
 }
