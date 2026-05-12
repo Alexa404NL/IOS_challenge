@@ -48,7 +48,7 @@ struct SignUpView: View {
 
                 // forms
                 VStack(alignment: .leading, spacing: 20) {
-                    VStack{
+                    VStack {
                         TextField("Nombre", text: $viewModel.name)
                             .padding()
                             .background(Color(.light))

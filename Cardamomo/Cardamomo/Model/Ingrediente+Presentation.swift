@@ -22,7 +22,8 @@ extension Ingrediente {
         if tag.contains("verd") || name.contains("lech") || name.contains("espin") || name.contains("zanah") {
             return "leaf"
         }
-        if tag.contains("frut") || name.contains("manzana") || name.contains("fresa") || name.contains("plát") || name.contains("plat") {
+        if tag.contains("frut") || name.contains("manzana") || name.contains("fresa")
+            || name.contains("plát") || name.contains("plat") {
             return "basket.fill"
         }
         if tag.contains("lact") || name.contains("queso") || name.contains("leche") || name.contains("yog") {
