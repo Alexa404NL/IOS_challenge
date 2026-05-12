@@ -95,7 +95,10 @@ struct CreateIngredientSheet: View {
                             }
                         }
                     }
-                    .disabled(ingredientName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isSavingIngredient)
+                    .disabled(
+                        ingredientName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        || viewModel.isSavingIngredient
+                    )
                 }
             }
         }

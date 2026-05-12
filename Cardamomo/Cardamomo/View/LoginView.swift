@@ -46,7 +46,7 @@ struct LoginView: View {
 
                 // forms
                 VStack(alignment: .leading, spacing: 20) {
-                    VStack{
+                    VStack {
                         TextField("Correo", text: $viewModel.email)
                             .padding()
                             .background(Color(.light))

@@ -3,7 +3,7 @@ import SwiftUI
 struct TagChipView: View {
     let title: String
     var isSelected: Bool = false
-    var action: (() -> Void)? = nil
+    var action: (() -> Void)?
 
     var body: some View {
         let content = Text(title)
