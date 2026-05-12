@@ -33,7 +33,10 @@ struct WelcomeView: View {
                     Text("Bienvenido")
                         .font(.largeTitle)
                         .bold()
-                    Text("Cardamomo es una app que busca facilitar el uso de la coina para cualquiera. Su nombre proviene de la misma especia que, por sus características, es versátil y aromática.")
+                    Text(
+                        "Cardamomo es una app que busca facilitar el uso de la cocina para cualquiera. "
+                        + "Su nombre proviene del mismo condimento que, por sus características, es versátil y aromático."
+                    )
                         .font(.body)
                         .opacity(0.8)
                     HStack(spacing: 15) {
@@ -68,7 +71,11 @@ struct RoundedCorner: Shape {
     var radius: CGFloat = .infinity
     var corners: UIRectCorner = .allCorners
     func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
         return Path(path.cgPath)
     }
 }

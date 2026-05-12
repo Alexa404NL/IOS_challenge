@@ -30,7 +30,7 @@ struct CreateIngredientSheet: View {
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Tags")
+                        Text("Etiquetas")
                             .font(.headline)
                         HStack(spacing: 12) {
                             TextField("Ej. lácteo", text: $tagInput)
@@ -38,7 +38,7 @@ struct CreateIngredientSheet: View {
                                 .background(Color.white)
                                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
 
-                            Button("Agregar") {
+                            Button("Añadir Etiqueta") {
                                 addTag(tagInput)
                             }
                             .buttonStyle(Boton(backgroundColor: .contrastDark, textColor: .light))
@@ -57,7 +57,7 @@ struct CreateIngredientSheet: View {
                     }
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Sugerencias")
+                        Text("Sugerencias de etiquetas")
                             .font(.headline)
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 110), spacing: 10)], spacing: 10) {
                             ForEach(viewModel.availableTags, id: \.self) { tag in
