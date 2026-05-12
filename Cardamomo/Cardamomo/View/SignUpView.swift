@@ -103,8 +103,12 @@ struct SignUpView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 #Preview {
-    SignUpView()
+    NavigationStack {
+        SignUpView()
+    }
 }

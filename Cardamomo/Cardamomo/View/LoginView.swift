@@ -10,7 +10,11 @@ import SwiftUI
 struct LoginView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = AuthViewModel()
-    @State private var showContentView = false
+    let onLoginSuccess: () -> Void
+
+    init(onLoginSuccess: @escaping () -> Void = {}) {
+        self.onLoginSuccess = onLoginSuccess
+    }
 
     var body: some View {
         ZStack {
@@ -73,7 +77,7 @@ struct LoginView: View {
                         .padding()
                     Button("Ingresar") {
                         viewModel.iniciarSesion {
-                            showContentView = true
+                            onLoginSuccess()
                         }
                     }
                     .disabled(viewModel.isLoading)
@@ -97,12 +101,12 @@ struct LoginView: View {
                 }
             }
         }
-        .navigationDestination(isPresented: $showContentView) {
-            ContentView()
-                .navigationBarBackButtonHidden(true)
-        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 #Preview {
-    LoginView()
+    NavigationStack {
+        LoginView()
+    }
 }
