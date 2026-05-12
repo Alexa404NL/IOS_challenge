@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import FirebaseAuth
+import SwiftData
 
 @MainActor
 final class RecetasViewModel: ObservableObject {
@@ -11,10 +12,12 @@ final class RecetasViewModel: ObservableObject {
     @Published var isSavingIngredient = false
     @Published var selectedIngredientKeys: Set<String> = []
     @Published var suggestedRecipes: [GeneratedRecipeCard] = []
+    @Published var isGeneratingRecipeSuggestions = false
 
     private let fallbackTags = [
         "verdura", "fruta", "lácteo", "proteína", "dulce", "salado", "grano", "picante"
     ]
+    private let ragService = RecipeRAGService()
 
     private var currentUserId: String? {
         Auth.auth().currentUser?.uid
@@ -129,7 +132,7 @@ final class RecetasViewModel: ObservableObject {
         }
     }
 
-    func generateRecipeSuggestions() {
+    func generateRecipeSuggestions(context: ModelContext) async {
         let chosenIngredients = selectedIngredients
 
         guard !chosenIngredients.isEmpty else {
@@ -138,53 +141,20 @@ final class RecetasViewModel: ObservableObject {
             return
         }
 
+        isGeneratingRecipeSuggestions = true
         errorMessage = nil
-        let baseName = chosenIngredients.first?.name.capitalized ?? "la casa"
-        let combinedTags = Array(Set(chosenIngredients.flatMap { $0.normalizedTags })).sorted()
-        let userId = currentUserId ?? "preview-user"
+        defer { isGeneratingRecipeSuggestions = false }
 
-        let recipes: [GeneratedRecipeCard] = [
-            GeneratedRecipeCard(
-                name: "Bowl de \(baseName)",
-                subtitle: "Ligera, fresca y pensada para aprovechar lo que ya tienes.",
-                heroTitle: "Fresco y balanceado",
-                instructions: buildInstructions(
-                    prefix: "Saltea una parte de los ingredientes y termina el bowl con elementos frescos",
-                    ingredients: chosenIngredients
-                ),
-                featuredIngredients: Array(chosenIngredients.shuffled().prefix(6)),
-                tags: combinedTags,
-                generatedByUserId: userId,
-                createdAt: Date()
-            ),
-            GeneratedRecipeCard(
-                name: "Salteado cremoso de \(baseName)",
-                subtitle: "Una opción reconfortante con textura suave y acabado dorado.",
-                heroTitle: "Cálido y cremoso",
-                instructions: buildInstructions(
-                    prefix: "Lleva los ingredientes a un sartén caliente, agrega una base cremosa y cocina hasta integrar sabores",
-                    ingredients: chosenIngredients
-                ),
-                featuredIngredients: Array(chosenIngredients.shuffled().prefix(6)),
-                tags: combinedTags,
-                generatedByUserId: userId,
-                createdAt: Date()
-            ),
-            GeneratedRecipeCard(
-                name: "Tacos de \(baseName)",
-                subtitle: "Más atrevida, con contraste entre toppings y un cierre especiado.",
-                heroTitle: "Crujiente y especiado",
-                instructions: buildInstructions(
-                    prefix: "Arma por capas, agrega un toque ácido y termina con los ingredientes de mayor textura",
-                    ingredients: chosenIngredients
-                ),
-                featuredIngredients: Array(chosenIngredients.shuffled().prefix(6)),
-                tags: combinedTags,
-                generatedByUserId: userId,
-                createdAt: Date()
+        do {
+            suggestedRecipes = try await ragService.generateSuggestions(
+                ingredients: chosenIngredients,
+                context: context,
+                userId: currentUserId ?? "preview-user"
             )
-        ]
-        suggestedRecipes = recipes
+        } catch {
+            suggestedRecipes = []
+            errorMessage = error.localizedDescription
+        }
     }
 
     func userLikedGeneratedRecipe(_ recipe: Receta) -> Bool {
@@ -205,11 +175,5 @@ final class RecetasViewModel: ObservableObject {
 
     private func selectionKey(for ingredient: Ingrediente) -> String {
         ingredient.id ?? "\(ingredient.name.lowercased())-\(ingredient.createdAt.timeIntervalSince1970)"
-    }
-
-    private func buildInstructions(prefix: String, ingredients: [Ingrediente]) -> String {
-        let names = ingredients.map { $0.name }
-        let ingredientList = names.joined(separator: ", ")
-        return "\(prefix). Usa como base: \(ingredientList). Ajusta sal, textura y toppings al gusto para cerrar la receta con un perfil casero y flexible."
     }
 }
