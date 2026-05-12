@@ -24,6 +24,16 @@ struct ModelosJson: Codable {
         case categoria = "Categoria"
         case valorNutricional = "Valor nutricional"
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        nombre = try container.decode(String.self, forKey: .nombre)
+        ingredientes = try container.decode(String.self, forKey: .ingredientes)
+        pasos = try container.decode(String.self, forKey: .pasos)
+        categoria = try container.decodeIfPresent(String.self, forKey: .categoria) ?? "Sin categoría"
+        valorNutricional = try container.decode(String.self, forKey: .valorNutricional)
+    }
 }
 
 // guardar en local
