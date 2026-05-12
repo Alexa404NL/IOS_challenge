@@ -1,7 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct IngredientSelectionView: View {
+    @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = RecetasViewModel()
+    @StateObject private var bdViewModel = BDViewModel()
     @State private var showCreateIngredientSheet = false
     @State private var showRecipeSuggestions = false
 
@@ -23,21 +26,43 @@ struct IngredientSelectionView: View {
             .scrollIndicators(.hidden)
 
             Button {
-                viewModel.generateRecipeSuggestions()
-                if !viewModel.suggestedRecipes.isEmpty {
-                    showRecipeSuggestions = true
+                Task {
+                    await viewModel.generateRecipeSuggestions(context: modelContext)
+                    if !viewModel.suggestedRecipes.isEmpty {
+                        showRecipeSuggestions = true
+                    }
                 }
             } label: {
-                Text("Crear recetas")
+                if viewModel.isGeneratingRecipeSuggestions {
+                    ProgressView()
+                        .tint(.light)
+                } else {
+                    Text("Crear recetas")
+                }
             }
             .buttonStyle(Boton(backgroundColor: .contrastDark, textColor: .light))
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
-            .disabled(viewModel.selectedIngredients.isEmpty)
+            .disabled(
+                viewModel.selectedIngredients.isEmpty ||
+                viewModel.isGeneratingRecipeSuggestions ||
+                bdViewModel.isGeneratingEmbeddings
+            )
+
+            if bdViewModel.isGeneratingEmbeddings {
+                EmbeddingLoadingView(
+                    progress: bdViewModel.seedProgress,
+                    processedRecipes: bdViewModel.processedRecipes,
+                    totalRecipes: bdViewModel.totalRecipes,
+                    message: bdViewModel.seedMessage
+                )
+                .transition(.opacity)
+            }
         }.background(Color.light)
         .navigationTitle("Ingredientes")
         .navigationBarTitleDisplayMode(.inline)
         .task {
+            await bdViewModel.seedDataIfNeeded(context: modelContext)
             await viewModel.loadIngredients()
         }
         .sheet(isPresented: $showCreateIngredientSheet) {
@@ -112,10 +137,22 @@ struct IngredientSelectionView: View {
                 .font(.footnote)
                 .foregroundStyle(.red)
                 .padding(.horizontal, 2)
+        } else if let seedMessage = bdViewModel.seedMessage {
+            Text(seedMessage)
+                .font(.footnote)
+                .foregroundStyle(.red)
+                .padding(.horizontal, 2)
         } else if viewModel.isLoadingIngredients && viewModel.availableIngredients.isEmpty {
             HStack(spacing: 12) {
                 ProgressView()
                 Text("Cargando ingredientes...")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        } else if viewModel.isGeneratingRecipeSuggestions {
+            HStack(spacing: 12) {
+                ProgressView()
+                Text("Generando recetas con tus ingredientes...")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
