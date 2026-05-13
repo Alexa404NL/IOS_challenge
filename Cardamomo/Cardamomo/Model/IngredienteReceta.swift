@@ -13,3 +13,12 @@ struct IngredienteReceta: Codable {
     var quantity: String
     var unit: String
 }
+
+extension IngredienteReceta {
+    init(ingredient: Ingrediente, quantity: String = "1", unit: String = "porción") {
+        self.ingredientId = ingredient.id
+        self.name = ingredient.name
+        self.quantity = quantity
+        self.unit = unit
+    }
+}

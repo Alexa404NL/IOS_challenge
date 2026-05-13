@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import FirebaseAuth
 import SwiftData
+import UIKit
 
 @MainActor
 final class RecetasViewModel: ObservableObject {
@@ -88,7 +89,7 @@ final class RecetasViewModel: ObservableObject {
         selectedIngredientKeys.contains(selectionKey(for: ingredient))
     }
 
-    func createIngredient(named name: String, tags: [String]) async -> Bool {
+    func createIngredient(named name: String, tags: [String], imageData: Data?) async -> Bool {
         guard let currentUserId else {
             errorMessage = "Necesitas iniciar sesión para crear ingredientes personales."
             return false
@@ -115,7 +116,8 @@ final class RecetasViewModel: ObservableObject {
                 createdAt: Date(),
                 ownerId: currentUserId,
                 isGlobal: false,
-                tags: cleanTags
+                tags: cleanTags,
+                imageData: imageData
             )
             try IngredientesRecetas.shared.saveIngredient(ingredient)
             await loadIngredients()
@@ -130,6 +132,58 @@ final class RecetasViewModel: ObservableObject {
             errorMessage = "No se pudo guardar el ingrediente: \(error.localizedDescription)"
             return false
         }
+    }
+
+    func updateIngredient(
+        _ original: Ingrediente,
+        name: String,
+        tags: [String],
+        imageData: Data?
+    ) async -> Bool {
+        guard let currentUserId else {
+            errorMessage = "Necesitas iniciar sesión para editar ingredientes."
+            return false
+        }
+        guard original.id != nil, original.ownerId == currentUserId, !original.isGlobal else {
+            errorMessage = "Este ingrediente no se puede editar."
+            return false
+        }
+
+        let cleanName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanTags = Array(Set(tags.map {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        }.filter { !$0.isEmpty })).sorted()
+
+        guard !cleanName.isEmpty else {
+            errorMessage = "Escribe un nombre válido para el ingrediente."
+            return false
+        }
+
+        isSavingIngredient = true
+        errorMessage = nil
+        defer { isSavingIngredient = false }
+
+        do {
+            var updated = original
+            updated.name = cleanName
+            updated.tags = cleanTags
+            updated.imageData = imageData
+            try IngredientesRecetas.shared.saveIngredient(updated)
+            await loadIngredients()
+            return true
+        } catch {
+            errorMessage = "No se pudo actualizar el ingrediente: \(error.localizedDescription)"
+            return false
+        }
+    }
+
+    func canEditIngredient(_ ingredient: Ingrediente) -> Bool {
+        guard let currentUserId else { return false }
+        return !ingredient.isGlobal && ingredient.ownerId == currentUserId && ingredient.id != nil
+    }
+
+    func downgradeQuality(image: UIImage) -> Data? {
+        image.jpegData(compressionQuality: 0.2)
     }
 
     func generateRecipeSuggestions(context: ModelContext) async {

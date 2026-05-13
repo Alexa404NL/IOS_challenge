@@ -1,52 +1,101 @@
 import SwiftUI
+import SwiftData
 
 struct IngredientSelectionView: View {
-    @StateObject private var viewModel = RecetasViewModel()
+    @Environment(\.modelContext) private var modelContext
+    @ObservedObject var viewModel: RecetasViewModel
+    @StateObject private var bdViewModel = BDViewModel()
     @State private var showCreateIngredientSheet = false
-    @State private var showRecipeSuggestions = false
+    @State private var editingIngredient: Ingrediente?
+    let onRecipesGenerated: () -> Void
 
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    header
-                    searchBar
-                    selectedIngredients
-                    feedbackBlock
-                    ingredientSections
-                    Color.clear.frame(height: 110)
+                LazyVStack(spacing: 0) {
+                    topBanner
+                    VStack(alignment: .leading, spacing: 24) {
+                        selectedIngredients
+                        feedbackBlock
+                        ingredientSections
+                        Color.clear.frame(height: 110)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                    .padding(.bottom, 24)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 12)
-                .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
 
-            Button {
-                viewModel.generateRecipeSuggestions()
-                if !viewModel.suggestedRecipes.isEmpty {
-                    showRecipeSuggestions = true
+            if !viewModel.selectedIngredients.isEmpty {
+                Button {
+                    Task {
+                        await viewModel.generateRecipeSuggestions(context: modelContext)
+                        if !viewModel.suggestedRecipes.isEmpty {
+                            await MainActor.run {
+                                onRecipesGenerated()
+                            }
+                        }
+                    }
+                } label: {
+                    if viewModel.isGeneratingRecipeSuggestions {
+                        ProgressView()
+                            .tint(.light)
+                    } else {
+                        Text("Crear recetas")
+                    }
                 }
-            } label: {
-                Text("Crear recetas")
+                .buttonStyle(Boton(backgroundColor: .contrastDark, textColor: .light))
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
+                .disabled(
+                    viewModel.selectedIngredients.isEmpty ||
+                    viewModel.isGeneratingRecipeSuggestions ||
+                    bdViewModel.isGeneratingEmbeddings
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
-            .buttonStyle(Boton(backgroundColor: .contrastDark, textColor: .light))
-            .padding(.horizontal, 20)
-            .padding(.bottom, 24)
-            .disabled(viewModel.selectedIngredients.isEmpty)
-        }.background(Color.light)
+
+            if bdViewModel.isGeneratingEmbeddings {
+                EmbeddingLoadingView(
+                    progress: bdViewModel.seedProgress,
+                    processedRecipes: bdViewModel.processedRecipes,
+                    totalRecipes: bdViewModel.totalRecipes,
+                    message: bdViewModel.seedMessage
+                )
+                .transition(.opacity)
+            }
+        }
+        .background(Color.light)
+        .animation(.easeInOut(duration: 0.25), value: viewModel.selectedIngredients.isEmpty)
         .navigationTitle("Ingredientes")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Color.accent, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .task {
+            await bdViewModel.seedDataIfNeeded(context: modelContext)
             await viewModel.loadIngredients()
         }
         .sheet(isPresented: $showCreateIngredientSheet) {
             CreateIngredientSheet(viewModel: viewModel)
         }
-        .navigationDestination(isPresented: $showRecipeSuggestions) {
-            RecipeSuggestionsView(viewModel: viewModel)
+        .sheet(item: $editingIngredient) { ingredient in
+            CreateIngredientSheet(viewModel: viewModel, ingredientToEdit: ingredient)
         }
     }
+    private var topBanner: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            header
+            searchBar
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 24)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.accent)
+        .cornerRadius(36, corners: [.bottomLeft, .bottomRight])
+    }
+
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Selecciona los ingredientes que tienes")
@@ -112,10 +161,22 @@ struct IngredientSelectionView: View {
                 .font(.footnote)
                 .foregroundStyle(.red)
                 .padding(.horizontal, 2)
+        } else if let seedMessage = bdViewModel.seedMessage {
+            Text(seedMessage)
+                .font(.footnote)
+                .foregroundStyle(.red)
+                .padding(.horizontal, 2)
         } else if viewModel.isLoadingIngredients && viewModel.availableIngredients.isEmpty {
             HStack(spacing: 12) {
                 ProgressView()
                 Text("Cargando ingredientes...")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        } else if viewModel.isGeneratingRecipeSuggestions {
+            HStack(spacing: 12) {
+                ProgressView()
+                Text("Generando recetas con tus ingredientes...")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -141,7 +202,9 @@ struct IngredientSelectionView: View {
                 IngredientSectionView(
                     section: section,
                     isSelected: viewModel.isSelected,
-                    onToggle: viewModel.toggleSelection(for:)
+                    onToggle: viewModel.toggleSelection(for:),
+                    onEdit: { editingIngredient = $0 },
+                    canEdit: viewModel.canEditIngredient
                 )
             }
         }
@@ -150,6 +213,6 @@ struct IngredientSelectionView: View {
 
 #Preview {
     NavigationStack {
-        IngredientSelectionView()
+        IngredientSelectionView(viewModel: RecetasViewModel(), onRecipesGenerated: {})
     }
 }

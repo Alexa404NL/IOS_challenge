@@ -28,14 +28,13 @@ struct RecipeSuggestionCardView: View {
                 LazyVGrid(columns: gridColumns, spacing: 12) {
                     ForEach(card.featuredIngredients) { ingredient in
                         VStack(spacing: 10) {
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(Color.light.opacity(0.5))
-                                .frame(height: 78)
-                                .overlay {
-                                    Image(systemName: ingredient.symbolName)
-                                        .font(.system(size: 24, weight: .semibold))
-                                        .foregroundStyle(Color.contrast)
-                                }
+                            IngredientArtworkView(
+                                ingredient: ingredient,
+                                isSelected: false,
+                                height: 78,
+                                cornerRadius: 20,
+                                iconSize: 24
+                            )
                             Text(ingredient.name)
                                 .font(.footnote.weight(.semibold))
                                 .multilineTextAlignment(.center)
@@ -114,9 +113,13 @@ struct RecipeSuggestionCardView: View {
 
     private func ingredientOrb(for ingredient: Ingrediente) -> some View {
         VStack(spacing: 8) {
-            Image(systemName: ingredient.symbolName)
-                .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(Color.contrast)
+            IngredientArtworkView(
+                ingredient: ingredient,
+                isSelected: false,
+                height: 42,
+                cornerRadius: 14,
+                iconSize: 20
+            )
             Text(ingredient.name)
                 .font(.caption.weight(.semibold))
                 .multilineTextAlignment(.center)

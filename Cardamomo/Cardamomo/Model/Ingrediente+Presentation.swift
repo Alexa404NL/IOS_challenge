@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 extension Ingrediente {
     var normalizedTags: [String] {
@@ -39,5 +40,10 @@ extension Ingrediente {
             return "birthday.cake.fill"
         }
         return "fork.knife"
+    }
+
+    var uiImage: UIImage? {
+        guard let imageData else { return nil }
+        return UIImage(data: imageData)
     }
 }
