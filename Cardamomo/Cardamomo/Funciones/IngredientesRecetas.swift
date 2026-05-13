@@ -44,6 +44,19 @@ class IngredientesRecetas {
             let savedData = RecetaGuardada(savedAt: Date())
             try savedRef.setData(from: savedData)
     }
+    func unsaveRecipe(userId: String, recipeId: String) async throws {
+        try await database.collection("users")
+            .document(userId)
+            .collection("saved_recipes")
+            .document(recipeId)
+            .delete()
+    }
+    func updateRecipe(_ receta: Receta) throws {
+        guard let id = receta.id else {
+            throw NSError(domain: "IngredientesRecetas", code: 0, userInfo: [NSLocalizedDescriptionKey: "Receta sin id."])
+        }
+        try database.collection("recipes").document(id).setData(from: receta, merge: true)
+    }
     func fetchSavedRecipes(for userId: String) async throws -> [Receta] {
             let savedRefQuery = database.collection("users").document(userId).collection("saved_recipes")
             let snapshot = try await savedRefQuery.order(by: "savedAt", descending: true).getDocuments()
