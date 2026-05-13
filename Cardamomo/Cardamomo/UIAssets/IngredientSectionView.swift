@@ -4,10 +4,8 @@ struct IngredientSectionView: View {
     let section: IngredientSection
     let isSelected: (Ingrediente) -> Bool
     let onToggle: (Ingrediente) -> Void
-
-    private let columns = [
-        GridItem(.adaptive(minimum: 100, maximum: 140), spacing: 14)
-    ]
+    var onEdit: ((Ingrediente) -> Void)? = nil
+    var canEdit: ((Ingrediente) -> Bool)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -19,17 +17,27 @@ struct IngredientSectionView: View {
                     .foregroundStyle(.primary)
             }
 
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
-                ForEach(section.ingredients) { ingredient in
-                    IngredientCardView(
-                        ingredient: ingredient,
-                        isSelected: isSelected(ingredient)
-                    ) {
-                        onToggle(ingredient)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 14) {
+                    ForEach(section.ingredients) { ingredient in
+                        IngredientCardView(
+                            ingredient: ingredient,
+                            isSelected: isSelected(ingredient),
+                            action: { onToggle(ingredient) },
+                            onEdit: editClosure(for: ingredient)
+                        )
                     }
                 }
+                .padding(.vertical, 2)
+                .padding(.horizontal, 2)
             }
         }
+    }
+
+    private func editClosure(for ingredient: Ingrediente) -> (() -> Void)? {
+        guard let onEdit else { return nil }
+        if let canEdit, !canEdit(ingredient) { return nil }
+        return { onEdit(ingredient) }
     }
 
     private var sectionIcon: String {
