@@ -53,7 +53,6 @@
 			isa = PBXGroup;
 			children = (
 				64AFE1112FAFE22C00FC2D0C /* Cardamomo */,
-				64AFE1762FB0253C00FC2D0C /* Frameworks */,
 				64AFE1102FAFE22C00FC2D0C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -64,13 +63,6 @@
 				64AFE10F2FAFE22C00FC2D0C /* Cardamomo.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		64AFE1762FB0253C00FC2D0C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
