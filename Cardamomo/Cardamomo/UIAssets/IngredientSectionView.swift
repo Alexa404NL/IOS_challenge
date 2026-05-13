@@ -4,8 +4,8 @@ struct IngredientSectionView: View {
     let section: IngredientSection
     let isSelected: (Ingrediente) -> Bool
     let onToggle: (Ingrediente) -> Void
-    var onEdit: ((Ingrediente) -> Void)? = nil
-    var canEdit: ((Ingrediente) -> Bool)? = nil
+    var onEdit: ((Ingrediente) -> Void)?
+    var canEdit: ((Ingrediente) -> Bool)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {

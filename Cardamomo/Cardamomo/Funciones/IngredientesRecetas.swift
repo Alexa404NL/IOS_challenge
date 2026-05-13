@@ -53,7 +53,9 @@ class IngredientesRecetas {
     }
     func updateRecipe(_ receta: Receta) throws {
         guard let id = receta.id else {
-            throw NSError(domain: "IngredientesRecetas", code: 0, userInfo: [NSLocalizedDescriptionKey: "Receta sin id."])
+            let error = NSError(domain: "IngredientesRecetas", code: 0,
+                                userInfo: [NSLocalizedDescriptionKey: "Receta sin id."])
+            throw error
         }
         try database.collection("recipes").document(id).setData(from: receta, merge: true)
     }

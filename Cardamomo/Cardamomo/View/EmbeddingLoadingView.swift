@@ -12,7 +12,8 @@ struct EmbeddingLoadingView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 22) {
-                Image(systemName: "arrowtriangle.down.2.fill") .symbolEffect(.bounce.up.byLayer, options: .repeat(.periodic(delay: 0.0)))
+                Image(systemName: "arrowtriangle.down.2.fill")
+                    .symbolEffect(.bounce.up.byLayer, options: .repeat(.periodic(delay: 0.0)))
                     .font(.system(size: 42, weight: .semibold))
                     .foregroundStyle(Color.contrast)
 

@@ -4,7 +4,7 @@ struct IngredientCardView: View {
     let ingredient: Ingrediente
     let isSelected: Bool
     let action: () -> Void
-    var onEdit: (() -> Void)? = nil
+    var onEdit: (() -> Void)?
 
     var body: some View {
         VStack(spacing: 12) {

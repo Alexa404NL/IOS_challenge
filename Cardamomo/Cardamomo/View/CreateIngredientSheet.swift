@@ -102,7 +102,7 @@ struct CreateIngredientSheet: View {
             }
             .background(Color.light.ignoresSafeArea())
             .onAppear { preloadIfNeeded() }
-            .onChange(of: selectedPhotoItem) { newItem in
+            .onChange(of: selectedPhotoItem) { _, newItem in
                 Task {
                     await loadPhoto(from: newItem)
                 }

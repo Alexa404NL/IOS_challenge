@@ -61,7 +61,7 @@ struct SavedRecipesView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Tus recetas guardadas")
                 .font(.system(size: 32, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.contrastDark)
+                .foregroundStyle(Color.black)
             Text("Toca cualquier receta para verla a detalle o eliminarla.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -147,7 +147,7 @@ private struct SavedRecipeRowView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(recipe.name)
                     .font(.headline)
-                    .foregroundStyle(Color.contrastDark)
+                    .foregroundStyle(Color.black)
                     .lineLimit(2)
                 Text(summary)
                     .font(.subheadline)
@@ -243,7 +243,7 @@ struct SavedRecipeDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(currentRecipe.name)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(Color.contrastDark)
+                .foregroundStyle(Color.black)
             if !currentRecipe.tags.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -273,7 +273,7 @@ struct SavedRecipeDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Ingredientes")
                 .font(.title3.weight(.bold))
-                .foregroundStyle(Color.contrastDark)
+                .foregroundStyle(Color.black)
             if currentRecipe.ingredients.isEmpty {
                 Text("Sin ingredientes registrados.")
                     .font(.subheadline)
@@ -286,7 +286,7 @@ struct SavedRecipeDetailView: View {
                             .frame(width: 8, height: 8)
                         Text("\(ingredient.quantity) \(ingredient.unit) · \(ingredient.name)")
                             .font(.subheadline)
-                            .foregroundStyle(Color.contrastDark)
+                            .foregroundStyle(Color.black)
                         Spacer()
                     }
                 }
@@ -302,10 +302,10 @@ struct SavedRecipeDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Preparación")
                 .font(.title3.weight(.bold))
-                .foregroundStyle(Color.contrastDark)
+                .foregroundStyle(Color.black)
             Text(currentRecipe.instructions)
                 .font(.subheadline)
-                .foregroundStyle(Color.contrastDark)
+                .foregroundStyle(Color.black)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(20)
