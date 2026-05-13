@@ -58,15 +58,15 @@ struct ContentView: View {
                     path.append(.recipeSuggestions)
                 }
                 .tabItem {
-                    Image(systemName: "camera.viewfinder")
-                    Text("Cámara")
+                    Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
+                    Text("Generar")
                 }
                 .tag(ContentTab.ingredientSelection)
 
                 HelloWorldView()
                     .tabItem {
-                        Image(systemName: "leaf.circle")
-                        Text("HOAL")
+                        Image(systemName: "rectangle.stack")
+                        Text("Guardadas")
                     }
                     .tag(ContentTab.helloWorld)
             }

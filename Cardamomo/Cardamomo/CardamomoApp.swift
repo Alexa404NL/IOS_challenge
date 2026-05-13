@@ -16,7 +16,7 @@ struct CardamomoApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            WelcomeView()
+            ContentView()
         }
         .modelContainer(for: RecipeEntity.self)
     }
