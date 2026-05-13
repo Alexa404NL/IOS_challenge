@@ -63,7 +63,7 @@ struct ContentView: View {
                 }
                 .tag(ContentTab.ingredientSelection)
 
-                HelloWorldView()
+                SavedRecipesView(viewModel: recetasViewModel)
                     .tabItem {
                         Image(systemName: "rectangle.stack")
                         Text("Guardadas")

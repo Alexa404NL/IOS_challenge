@@ -14,6 +14,9 @@ final class RecetasViewModel: ObservableObject {
     @Published var selectedIngredientKeys: Set<String> = []
     @Published var suggestedRecipes: [GeneratedRecipeCard] = []
     @Published var isGeneratingRecipeSuggestions = false
+    @Published var savedRecipes: [Receta] = []
+    @Published var isLoadingSavedRecipes = false
+    @Published var isMutatingSavedRecipe = false
 
     private let fallbackTags = [
         "verdura", "fruta", "lácteo", "proteína", "dulce", "salado", "grano", "picante"
@@ -208,6 +211,49 @@ final class RecetasViewModel: ObservableObject {
         } catch {
             suggestedRecipes = []
             errorMessage = error.localizedDescription
+        }
+    }
+
+    func loadSavedRecipes() async {
+        guard let currentUserId else {
+            errorMessage = "Necesitas iniciar sesión para ver tus recetas guardadas."
+            savedRecipes = []
+            return
+        }
+
+        isLoadingSavedRecipes = true
+        errorMessage = nil
+        defer { isLoadingSavedRecipes = false }
+
+        do {
+            savedRecipes = try await IngredientesRecetas.shared.fetchSavedRecipes(for: currentUserId)
+        } catch {
+            errorMessage = "Error al cargar recetas guardadas: \(error.localizedDescription)"
+            savedRecipes = []
+        }
+    }
+
+    func deleteSavedRecipe(_ receta: Receta) async -> Bool {
+        guard let currentUserId else {
+            errorMessage = "Necesitas iniciar sesión para eliminar recetas."
+            return false
+        }
+        guard let recipeId = receta.id else {
+            errorMessage = "Receta sin identificador."
+            return false
+        }
+
+        isMutatingSavedRecipe = true
+        errorMessage = nil
+        defer { isMutatingSavedRecipe = false }
+
+        do {
+            try await IngredientesRecetas.shared.unsaveRecipe(userId: currentUserId, recipeId: recipeId)
+            savedRecipes.removeAll { $0.id == recipeId }
+            return true
+        } catch {
+            errorMessage = "No se pudo eliminar la receta: \(error.localizedDescription)"
+            return false
         }
     }
 
