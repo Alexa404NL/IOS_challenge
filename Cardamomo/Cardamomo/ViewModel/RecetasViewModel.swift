@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import FirebaseAuth
 import SwiftData
+import UIKit
 
 @MainActor
 final class RecetasViewModel: ObservableObject {
@@ -88,7 +89,7 @@ final class RecetasViewModel: ObservableObject {
         selectedIngredientKeys.contains(selectionKey(for: ingredient))
     }
 
-    func createIngredient(named name: String, tags: [String]) async -> Bool {
+    func createIngredient(named name: String, tags: [String], imageData: Data?) async -> Bool {
         guard let currentUserId else {
             errorMessage = "Necesitas iniciar sesión para crear ingredientes personales."
             return false
@@ -115,7 +116,8 @@ final class RecetasViewModel: ObservableObject {
                 createdAt: Date(),
                 ownerId: currentUserId,
                 isGlobal: false,
-                tags: cleanTags
+                tags: cleanTags,
+                imageData: imageData
             )
             try IngredientesRecetas.shared.saveIngredient(ingredient)
             await loadIngredients()
@@ -130,6 +132,10 @@ final class RecetasViewModel: ObservableObject {
             errorMessage = "No se pudo guardar el ingrediente: \(error.localizedDescription)"
             return false
         }
+    }
+
+    func downgradeQuality(image: UIImage) -> Data? {
+        image.jpegData(compressionQuality: 0.2)
     }
 
     func generateRecipeSuggestions(context: ModelContext) async {
