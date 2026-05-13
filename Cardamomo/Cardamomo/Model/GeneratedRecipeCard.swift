@@ -2,32 +2,46 @@ import Foundation
 
 struct GeneratedRecipeCard: Identifiable {
     let id = UUID()
-    let name: String
+    let receta: Receta
     let subtitle: String
     let heroTitle: String
-    let instructions: String
     let featuredIngredients: [Ingrediente]
-    let tags: [String]
-    let generatedByUserId: String
-    let createdAt: Date
 
-    var receta: Receta {
-        Receta(
-            id: nil,
-            name: name,
-            instructions: instructions,
-            createdAt: createdAt,
-            generatedByUserId: generatedByUserId,
-            imageUrl: nil,
-            ingredients: featuredIngredients.map {
-                IngredienteReceta(
-                    ingredientId: $0.id,
-                    name: $0.name,
-                    quantity: "1",
-                    unit: "porción"
-                )
-            },
-            tags: tags
+    init(
+        receta: Receta,
+        subtitle: String,
+        heroTitle: String,
+        featuredIngredients: [Ingrediente]
+    ) {
+        self.receta = receta
+        self.subtitle = subtitle
+        self.heroTitle = heroTitle
+        self.featuredIngredients = featuredIngredients
+    }
+
+    init(
+        name: String,
+        subtitle: String,
+        heroTitle: String,
+        instructions: String,
+        featuredIngredients: [Ingrediente],
+        tags: [String],
+        generatedByUserId: String,
+        createdAt: Date = Date()
+    ) {
+        self.init(
+            receta: Receta(
+                id: nil,
+                name: name,
+                instructions: instructions,
+                createdAt: createdAt,
+                generatedByUserId: generatedByUserId,
+                ingredients: featuredIngredients.map { IngredienteReceta(ingredient: $0) },
+                tags: tags
+            ),
+            subtitle: subtitle,
+            heroTitle: heroTitle,
+            featuredIngredients: featuredIngredients
         )
     }
 }

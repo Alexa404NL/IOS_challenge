@@ -14,7 +14,6 @@ struct Receta: Codable, Identifiable {
     var instructions: String
     var createdAt: Date
     var generatedByUserId: String
-    var imageUrl: String?
     var ingredients: [IngredienteReceta]
     var tags: [String]
 }

@@ -15,4 +15,5 @@ struct Ingrediente: Codable, Identifiable {
     var ownerId: String?
     var isGlobal: Bool
     var tags: [String]
+    var imageData: Data?
 }
