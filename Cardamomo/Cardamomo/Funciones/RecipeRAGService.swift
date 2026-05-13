@@ -124,12 +124,14 @@ final class RecipeRAGService {
 
         Mantén un estilo mexicano casero inspirado en las recetas de referencia.
         Puedes asumir básicos de cocina como agua, sal, pimienta, aceite y calor.
-        Si los ingredientes incluidos mencionan estos o alguna especia NO los incluyas como parte del platillo principal.
+        Si los ingredientes incluidos mencionan estos básicos o alguna especia, no los incluyas \
+        como parte del platillo principal.
         No agregues ingredientes principales que no estén en la lista del usuario.
-        Dentro de las intstrucciones se claro y
+        Dentro de las instrucciones sé claro y
         mayor detalle aquello que se tiene que realizar, desde preparación de instrumentos,
         cómo debe añadirse el alimento,
-        si debe ser condimentado, esto siguiendo el formato extenso de las instrucciones de las recetas provistas como referencia. 
+        si debe ser condimentado, siguiendo el formato extenso de las instrucciones de las recetas \
+        provistas como referencia.
         En caso de ser necesario extiende las instrucciones lo que sea necesario.
         Responde únicamente JSON válido, sin markdown, con esta forma exacta:
         {
@@ -143,8 +145,6 @@ final class RecipeRAGService {
             }
           ]
         }
-
-        Dentr
         """
     }
 
@@ -164,8 +164,7 @@ final class RecipeRAGService {
                 instructions: recipe.instructions,
                 featuredIngredients: featuredIngredients,
                 tags: recipe.tags.isEmpty ? fallbackTags : recipe.tags,
-                generatedByUserId: userId,
-                createdAt: Date()
+                generatedByUserId: userId
             )
         }
     }
@@ -191,8 +190,7 @@ final class RecipeRAGService {
                 ),
                 featuredIngredients: featuredIngredients,
                 tags: combinedTags,
-                generatedByUserId: userId,
-                createdAt: Date()
+                generatedByUserId: userId
             )
         }
     }
@@ -212,8 +210,8 @@ final class RecipeRAGService {
             references: references,
             userId: userId
         )
-        let existingNames = Set(cards.map { $0.name.lowercased() })
-        let additions = fallbackCards.filter { !existingNames.contains($0.name.lowercased()) }
+        let existingNames = Set(cards.map { $0.receta.name.lowercased() })
+        let additions = fallbackCards.filter { !existingNames.contains($0.receta.name.lowercased()) }
         return Array((cards + additions).prefix(3))
     }
 
