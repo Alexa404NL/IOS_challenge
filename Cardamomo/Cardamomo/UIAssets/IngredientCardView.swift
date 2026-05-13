@@ -8,14 +8,13 @@ struct IngredientCardView: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 12) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                        .fill(isSelected ? Color.contrastDark.opacity(0.16) : Color.white)
-                        .frame(height: 88)
-                    Image(systemName: ingredient.symbolName)
-                        .font(.system(size: 28, weight: .semibold))
-                        .foregroundStyle(isSelected ? Color.contrast : Color.contrastDark)
-                }
+                IngredientArtworkView(
+                    ingredient: ingredient,
+                    isSelected: isSelected,
+                    height: 88,
+                    cornerRadius: 22,
+                    iconSize: 28
+                )
                 Text(ingredient.name)
                     .font(.footnote.weight(.semibold))
                     .foregroundStyle(.primary)
